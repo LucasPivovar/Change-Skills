@@ -17,29 +17,35 @@
 
     <div class="objective-wrapper">
       <!-- Mission Box -->
-      <div class="mission-box">
-        <div class="mission-header">
-          <FlagIcon size="18" class="mission-icon" />
-          <span class="mission-title"><strong>Missão:</strong> Praticar e descobrir interesses</span>
+      <div class="mission-box" :class="{ 'is-open': isMissionOpen }">
+        <div class="mission-header" @click="toggleMission">
+          <div class="header-left">
+            <FlagIcon size="18" class="mission-icon" />
+            <span class="mission-title"><strong>Missão:</strong> Praticar e descobrir interesses</span>
+          </div>
+          <ChevronDownIcon size="20" class="toggle-icon" :class="{ 'rotated': isMissionOpen }" />
         </div>
-        <p class="mission-desc">Converse com seu parceiro e descubra mais sobre os interesses dele.</p>
         
-        <div class="mission-icons">
-          <div class="mission-item" :class="{ 'completed': objectives.hobbies }">
-            <div class="icon-circle"><TargetIcon size="20" /></div>
-            <span>Hobbies</span>
-          </div>
-          <div class="mission-item" :class="{ 'completed': objectives.music }">
-            <div class="icon-circle"><TargetIcon size="20" /></div>
-            <span>Música</span>
-          </div>
-          <div class="mission-item" :class="{ 'completed': objectives.movies }">
-            <div class="icon-circle"><TargetIcon size="20" /></div>
-            <span>Filmes</span>
-          </div>
-          <div class="mission-item" :class="{ 'completed': objectives.sports }">
-            <div class="icon-circle"><TargetIcon size="20" /></div>
-            <span>Esportes</span>
+        <div class="mission-content" v-show="isMissionOpen">
+          <p class="mission-desc">Converse com seu parceiro e descubra mais sobre os interesses dele.</p>
+          
+          <div class="mission-icons">
+            <div class="mission-item" :class="{ 'completed': objectives.hobbies }">
+              <div class="icon-circle"><TargetIcon size="20" /></div>
+              <span>Hobbies</span>
+            </div>
+            <div class="mission-item" :class="{ 'completed': objectives.music }">
+              <div class="icon-circle"><TargetIcon size="20" /></div>
+              <span>Música</span>
+            </div>
+            <div class="mission-item" :class="{ 'completed': objectives.movies }">
+              <div class="icon-circle"><TargetIcon size="20" /></div>
+              <span>Filmes</span>
+            </div>
+            <div class="mission-item" :class="{ 'completed': objectives.sports }">
+              <div class="icon-circle"><TargetIcon size="20" /></div>
+              <span>Esportes</span>
+            </div>
           </div>
         </div>
         
@@ -112,9 +118,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { 
   ChevronLeftIcon, 
+  ChevronDownIcon,
   ClockIcon, 
   TargetIcon, 
   FlagIcon,
@@ -122,6 +129,12 @@ import {
   ChevronRightIcon,
   CheckCheckIcon
 } from '@lucide/vue'
+
+const isMissionOpen = ref(false)
+
+const toggleMission = () => {
+  isMissionOpen.value = !isMissionOpen.value
+}
 
 const props = defineProps({
   isSaved: {
@@ -173,8 +186,6 @@ const objectives = ref({
   movies: false,
   sports: false
 })
-
-import { watch } from 'vue'
 
 const objectiveCompleted = computed(() => {
   return objectives.value.hobbies && objectives.value.music && objectives.value.movies && objectives.value.sports
@@ -336,10 +347,27 @@ const sendMessage = () => {
 .mission-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   color: #16a34a;
   font-size: 14px;
   margin-bottom: 4px;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.rotated {
+  transform: rotate(180deg);
 }
 
 .mission-icon {
@@ -348,6 +376,10 @@ const sendMessage = () => {
 
 .mission-title strong {
   font-weight: 800;
+}
+
+.mission-content {
+  margin-top: 8px;
 }
 
 .mission-desc {
@@ -470,6 +502,8 @@ const sendMessage = () => {
   max-width: 75%;
   padding: 12px 16px;
   position: relative;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .message-bubble p {

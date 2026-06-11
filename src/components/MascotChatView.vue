@@ -19,29 +19,35 @@
 
     <div class="objective-wrapper">
       <!-- Mission Box -->
-      <div class="mission-box">
-        <div class="mission-header">
-          <FlagIcon size="18" class="mission-icon" />
-          <span class="mission-title"><strong>Missão:</strong> Planeje uma viagem para Londres</span>
+      <div class="mission-box" :class="{ 'is-open': isMissionOpen }">
+        <div class="mission-header" @click="toggleMission">
+          <div class="header-left">
+            <FlagIcon size="18" class="mission-icon" />
+            <span class="mission-title"><strong>Missão:</strong> Planeje uma viagem para Londres</span>
+          </div>
+          <ChevronDownIcon size="20" class="toggle-icon" :class="{ 'rotated': isMissionOpen }" />
         </div>
-        <p class="mission-desc">Converse com o Camaleão e complete todos os objetivos para finalizar sua missão.</p>
         
-        <div class="mission-icons">
-          <div class="mission-item" :class="{ 'completed': objectives.hotel }">
-            <div class="icon-circle"><BuildingIcon size="20" /></div>
-            <span>Reservar hotel</span>
-          </div>
-          <div class="mission-item" :class="{ 'completed': objectives.food }">
-            <div class="icon-circle"><UtensilsIcon size="20" /></div>
-            <span>Escolher restaurante</span>
-          </div>
-          <div class="mission-item" :class="{ 'completed': objectives.directions }">
-            <div class="icon-circle"><MapPinIcon size="20" /></div>
-            <span>Perguntar direções</span>
-          </div>
-          <div class="mission-item" :class="{ 'completed': objectives.route }">
-            <div class="icon-circle"><RouteIcon size="20" /></div>
-            <span>Definir roteiro</span>
+        <div class="mission-content" v-show="isMissionOpen">
+          <p class="mission-desc">Converse com o Camaleão e complete todos os objetivos para finalizar sua missão.</p>
+          
+          <div class="mission-icons">
+            <div class="mission-item" :class="{ 'completed': objectives.hotel }">
+              <div class="icon-circle"><BuildingIcon size="20" /></div>
+              <span>Reservar hotel</span>
+            </div>
+            <div class="mission-item" :class="{ 'completed': objectives.food }">
+              <div class="icon-circle"><UtensilsIcon size="20" /></div>
+              <span>Escolher restaurante</span>
+            </div>
+            <div class="mission-item" :class="{ 'completed': objectives.directions }">
+              <div class="icon-circle"><MapPinIcon size="20" /></div>
+              <span>Perguntar direções</span>
+            </div>
+            <div class="mission-item" :class="{ 'completed': objectives.route }">
+              <div class="icon-circle"><RouteIcon size="20" /></div>
+              <span>Definir roteiro</span>
+            </div>
           </div>
         </div>
         
@@ -102,7 +108,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { 
-  ChevronLeftIcon, 
+  ChevronLeftIcon,
+  ChevronDownIcon,
   ClockIcon, 
   FlagIcon, 
   BuildingIcon, 
@@ -113,6 +120,10 @@ import {
   CheckCheckIcon
 } from '@lucide/vue'
 
+const isMissionOpen = ref(false)
+const toggleMission = () => {
+  isMissionOpen.value = !isMissionOpen.value
+}
 const emit = defineEmits(['goBack', 'newPartner'])
 
 const timeRemaining = ref(5 * 60)
@@ -299,10 +310,27 @@ const restartMission = () => {
 .mission-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   color: #16a34a;
   font-size: 14px;
   margin-bottom: 4px;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.rotated {
+  transform: rotate(180deg);
 }
 
 .mission-icon {
@@ -311,6 +339,10 @@ const restartMission = () => {
 
 .mission-title strong {
   font-weight: 800;
+}
+
+.mission-content {
+  margin-top: 8px;
 }
 
 .mission-desc {
@@ -422,6 +454,8 @@ const restartMission = () => {
   max-width: 75%;
   padding: 12px 16px;
   position: relative;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .message-bubble p {

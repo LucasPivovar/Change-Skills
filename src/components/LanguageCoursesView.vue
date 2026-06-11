@@ -8,6 +8,7 @@
     </header>
     
     <div class="content-scroll">
+      <p class="intro-text">Selecione o curso ideal para o seu nível e comece a conversar agora mesmo!</p>
       <div class="course-cards">
         <div 
           class="course-card" 
@@ -18,13 +19,18 @@
         >
           <img :src="course.image" :alt="course.title" class="course-img" @error="handleImageError($event, course.id)" />
           <div class="course-info">
-            <h3>{{ course.title }}</h3>
-            <div class="course-meta">
-              <span><BookOpenIcon size="14" /> Material: {{ course.material }}</span>
-              <span v-if="course.metaLabel && course.metaValue"><UserIcon size="14" /> {{ course.metaLabel }}: {{ course.metaValue }}</span>
+            <div class="meta-top">
+              <h3>{{ course.title }}</h3>
+              <div class="course-meta">
+                <span v-if="course.metaLabel && course.metaValue">
+                  <UserIcon size="12" /> {{ course.metaLabel }}: {{ course.metaValue }}
+                </span>
+                <span v-else>
+                  <UserIcon size="12" /> Idade: Adultos
+                </span>
+              </div>
             </div>
-            <p>{{ course.desc }}</p>
-            <button class="select-btn">Saiba Mais</button>
+            <button class="select-btn">Começar!</button>
           </div>
         </div>
       </div>
@@ -34,7 +40,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { ChevronLeftIcon, BookOpenIcon, UserIcon } from '@lucide/vue'
+import { ChevronLeftIcon, UserIcon } from '@lucide/vue'
 import fallbackImg from '../assets/header-hero.jpg'
 import { coursesData } from '../data/coursesData.js'
 
@@ -68,7 +74,7 @@ const handleImageError = (event, type) => {
   width: 100%;
   height: 100%;
   background: #f8fafc;
-  z-index: 40; /* Above HomeView but below modals */
+  z-index: 40;
   display: flex;
   flex-direction: column;
   animation: slideIn 0.3s ease;
@@ -111,24 +117,42 @@ h2 {
 .content-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 20px;
+  padding: 20px 16px;
+}
+
+.intro-text {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  font-weight: 600;
+  text-align: center;
 }
 
 .course-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
 }
 
 .course-card {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  border: 1.5px solid #e2e8f0;
   cursor: pointer;
   opacity: 0;
   animation: slideUpFade 0.4s ease forwards;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+.course-card:hover {
+  border-color: #1c5bf0;
 }
 
 .course-card:active {
@@ -137,57 +161,61 @@ h2 {
 
 .course-img {
   width: 100%;
-  height: 320px;
+  height: 190px;
   object-fit: cover;
 }
 
 .course-info {
-  padding: 20px;
+  padding: 10px 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  flex: 1;
+  gap: 8px;
+}
+
+.meta-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .course-info h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 13px;
   color: #1a235c;
   font-weight: 800;
+  line-height: 1.2;
 }
 
 .course-meta {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
 }
 
 .course-meta span {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 4px;
+  font-size: 10px;
   color: #64748b;
   font-weight: 600;
-}
-
-.course-info p {
-  margin: 8px 0 16px 0;
-  font-size: 14px;
-  color: #475569;
-  line-height: 1.5;
 }
 
 .select-btn {
   background: #1c5bf0;
   color: white;
   border: none;
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 10px;
+  padding: 8px 10px;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 12px;
   cursor: pointer;
   transition: background 0.2s;
   width: 100%;
+  text-align: center;
+  margin-top: 6px;
 }
 
 .select-btn:active {

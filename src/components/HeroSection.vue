@@ -18,15 +18,27 @@ import { ref, onMounted } from 'vue'
 const showBubble = ref(false)
 const isTyping = ref(false)
 
-const text1 = 'Ready to'
-const text2 = 'practice'
-const text3 = ' today?'
+const variations = [
+  { text1: 'Pronto para', text2: 'praticar', text3: ' hoje?' },
+  { text1: 'Vamos', text2: 'aprender', text3: ' um novo idioma?' },
+  { text1: 'Hora de', text2: 'conversar', text3: ' com o mundo!' },
+  { text1: 'Seu próximo', text2: 'desafio', text3: ' começa agora!' }
+]
+
+const text1 = ref('')
+const text2 = ref('')
+const text3 = ref('')
 
 const typed1 = ref('')
 const typed2 = ref('')
 const typed3 = ref('')
 
 onMounted(async () => {
+  const selected = variations[Math.floor(Math.random() * variations.length)]
+  text1.value = selected.text1
+  text2.value = selected.text2
+  text3.value = selected.text3
+  
   // Little delay before bubble appears
   setTimeout(() => {
     showBubble.value = true
@@ -43,9 +55,9 @@ const startTyping = async () => {
     }
   }
 
-  await type(text1, typed1)
-  await type(text2, typed2)
-  await type(text3, typed3)
+  await type(text1.value, typed1)
+  await type(text2.value, typed2)
+  await type(text3.value, typed3)
   
   isTyping.value = false
 }

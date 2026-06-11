@@ -136,15 +136,15 @@ const handleNavigation = (route) => {
       v-if="currentForm === 'conversations'"
       @openSidebar="isSidebarOpen = true"
       @openChat="currentForm = 'saved-chat'"
+      @navigate="handleNavigation"
     />
   </transition>
-
-
 
   <transition name="fade">
     <ProfileView 
       v-if="currentForm === 'profile'"
       @goBack="currentForm = 'home'"
+      @navigate="handleNavigation"
     />
   </transition>
 </template>

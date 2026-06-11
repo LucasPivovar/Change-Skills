@@ -353,6 +353,8 @@ const sendMessage = () => {
 .message-bubble {
   padding: 12px 16px;
   position: relative;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .message-bubble p {

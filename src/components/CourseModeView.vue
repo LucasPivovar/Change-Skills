@@ -2,62 +2,61 @@
   <div class="modal-backdrop" @click.self="$emit('goBack')">
     <transition name="slide-up" appear>
       <div class="mode-container">
-    <div class="header-bar">
-      <button class="close-btn" @click="$emit('goBack')">
-        <XIcon size="28" stroke-width="2.5" />
-      </button>
-    </div>
-
-    <div class="mode-content">
-      <div class="mascot-header-row">
-        <div class="text-col">
-          <h2>Como você quer<br>praticar hoje?</h2>
+        <div class="header-bar">
+          <button class="close-btn" @click="$emit('goBack')">
+            <XIcon size="28" stroke-width="2.5" />
+          </button>
         </div>
-        <div class="img-col">
-          <img src="../assets/header-hero.jpg" class="peeking-mascot" />
+
+        <div class="mode-content">
+          <div class="mascot-header-row">
+            <div class="text-col">
+              <h2>Como você quer<br>praticar hoje?</h2>
+              <p class="subtitle-text">Escolha uma modalidade abaixo para iniciar a sua conversação no idioma!</p>
+            </div>
+            <div class="img-col">
+              <img src="../assets/header-hero.jpg" class="peeking-mascot" />
+            </div>
+          </div>
+          
+          <div class="options-list">
+            <div class="option-card solo-card" @click="selectMode('solo')">
+              <div class="icon-wrapper solo-icon-wrapper">
+                <UsersIcon size="32" class="main-icon" />
+                <MessageCircleIcon size="16" class="badge-icon badge-solo" />
+              </div>
+              <div class="option-text">
+                <h3>Conversa com 1 pessoa</h3>
+                <p>Encontre um parceiro do seu nível</p>
+              </div>
+              <ChevronRightIcon class="arrow-icon" size="24" stroke-width="2.5" />
+            </div>
+
+            <div class="option-card mascot-card" @click="selectMode('mascot')">
+              <div class="icon-wrapper mascot-icon-wrapper">
+                <BotIcon size="32" class="main-icon" />
+              </div>
+              <div class="option-text">
+                <h3>Conversa com IA</h3>
+                <p>Pratique conversação com nossa inteligência artificial</p>
+              </div>
+              <ChevronRightIcon class="arrow-icon" size="24" stroke-width="2.5" />
+            </div>
+          </div>
+          <div class="bottom-banner-wrapper">
+            <div class="bottom-banner-pill">
+              <img src="../assets/dica-hero.png" class="banner-mascot" />
+              <span class="banner-text">Escolha e vamos<br>praticar juntos!</span>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div class="options-list">
-
-
-        <div class="option-card solo-card" @click="selectMode('solo')">
-          <div class="icon-wrapper solo-icon-wrapper">
-            <UsersIcon size="48" class="main-icon" />
-            <MessageCircleIcon size="24" class="badge-icon badge-solo" />
-          </div>
-          <div class="option-text">
-            <h3>Conversa com 1 pessoa</h3>
-            <p>Encontre um parceiro do seu nível</p>
-          </div>
-          <ChevronRightIcon class="arrow-icon" size="24" stroke-width="2.5" />
-        </div>
-
-        <div class="option-card mascot-card" @click="selectMode('mascot')">
-          <div class="icon-wrapper mascot-icon-wrapper">
-            <BotIcon size="40" class="main-icon" />
-          </div>
-          <div class="option-text">
-            <h3>Conversa com IA</h3>
-            <p>Pratique conversação com nossa inteligência artificial</p>
-          </div>
-          <ChevronRightIcon class="arrow-icon" size="24" stroke-width="2.5" />
-        </div>
-      </div>
-      <div class="bottom-banner-wrapper">
-        <div class="bottom-banner-pill">
-          <img src="../assets/dica-hero.png" class="banner-mascot" />
-          <span class="banner-text">Escolha e vamos<br>praticar juntos!</span>
-        </div>
-        </div>
-      </div>
-    </div>
     </transition>
   </div>
 </template>
 
 <script setup>
-import { X as XIcon, Users as UsersIcon, MessageCircle as MessageCircleIcon, ChevronRight as ChevronRightIcon, Bot as BotIcon } from '@lucide/vue'
+import { X as XIcon, Users as UsersIcon, MessageCircle as MessageCircleIcon, Bot as BotIcon, ChevronRight as ChevronRightIcon } from '@lucide/vue'
 
 const emit = defineEmits(['goBack', 'selectMode'])
 
@@ -117,7 +116,7 @@ const selectMode = (mode) => {
 
 .mode-content {
   flex: 1;
-  padding: 0 24px 24px; /* Removed 120px bottom padding, added standard padding */
+  padding: 0 24px 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -127,15 +126,23 @@ const selectMode = (mode) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .text-col h2 {
-  font-size: 26px;
+  font-size: 24px;
   color: #1a235c;
   font-weight: 800;
-  line-height: 1.3;
+  line-height: 1.2;
   margin: 0;
+}
+
+.subtitle-text {
+  font-size: 13px;
+  color: #64748b;
+  margin: 8px 0 0 0;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .img-col {
@@ -145,25 +152,28 @@ const selectMode = (mode) => {
 }
 
 .peeking-mascot {
-  height: 85px; /* Made slightly smaller */
+  height: 80px;
   object-fit: contain;
 }
 
 .options-list {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  width: 100%;
 }
 
 .option-card {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  padding: 28px 20px;
+  padding: 20px;
   border-radius: 20px;
   border: 2px solid;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   background: white;
+  height: auto;
 }
 
 .option-card:active {
@@ -172,22 +182,22 @@ const selectMode = (mode) => {
 
 .solo-card {
   border-color: #22c55e;
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.1);
 }
 
 .mascot-card {
   border-color: #0ea5e9;
-  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.1);
 }
 
 .icon-wrapper {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20px;
+  margin-right: 16px;
   position: relative;
   flex-shrink: 0;
 }
@@ -203,16 +213,17 @@ const selectMode = (mode) => {
 }
 
 .main-icon {
-  margin-top: 8px;
+  margin: 0;
 }
 
 .badge-icon {
   position: absolute;
-  top: -8px;
+  top: -4px;
   right: -4px;
   background: white;
   border-radius: 50%;
   padding: 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .badge-solo {
@@ -220,65 +231,71 @@ const selectMode = (mode) => {
 }
 
 .option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   flex: 1;
 }
 
 .option-text h3 {
-  font-size: 18px;
+  font-size: 16px;
   color: #1a235c;
-  margin: 0 0 6px 0;
+  margin: 0;
   font-weight: 800;
+  line-height: 1.2;
 }
 
 .option-text p {
-  font-size: 14px;
+  font-size: 12px;
   color: #64748b;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.3;
   font-weight: 500;
 }
 
 .arrow-icon {
   color: #cbd5e1;
+  margin-left: 12px;
 }
 
 .bottom-banner-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 80px; /* Replaces padding-top to give distance from cards without auto margin issues */
-  margin-bottom: 24px;
+  margin-top: auto;
+  padding-top: 32px;
+  margin-bottom: 16px;
   width: 100%;
 }
 
 .bottom-banner-pill {
   position: relative;
   background: #f0f4ff;
-  padding: 16px 32px 16px 90px; /* Increased left padding to push text away from mascot */
+  padding: 16px 24px 16px 80px;
   border-radius: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(28, 91, 240, 0.05);
-  margin-left: 40px; /* Shift the whole block more to the right */
+  margin-left: 20px;
 }
 
 .banner-mascot {
   position: absolute;
-  left: -70px; /* Pulled slightly more to the left to compensate for size */
-  bottom: -24px; /* Glued to the absolute bottom of the container */
-  width: 170px; /* Even bigger */
-  height: 170px;
+  left: -50px;
+  bottom: -20px;
+  width: 130px;
+  height: 130px;
   object-fit: contain;
   object-position: bottom left;
   z-index: 5;
 }
 
 .banner-text {
-  font-size: 18px;
+  font-size: 15px;
   color: #1a235c;
   font-weight: 800;
-  line-height: 1.4;
+  line-height: 1.3;
   text-align: center;
 }
 
