@@ -19,10 +19,11 @@ const showBubble = ref(false)
 const isTyping = ref(false)
 
 const variations = [
+  { text1: 'Hora de', text2: 'conversar', text3: ' com o mundo!' },
   { text1: 'Pronto para', text2: 'praticar', text3: ' hoje?' },
   { text1: 'Vamos', text2: 'aprender', text3: ' um novo idioma?' },
-  { text1: 'Hora de', text2: 'conversar', text3: ' com o mundo!' },
-  { text1: 'Seu próximo', text2: 'desafio', text3: ' começa agora!' }
+  { text1: 'Seu próximo', text2: 'desafio', text3: ' começa agora!' },
+  { text1: 'Cada palavra é um', text2: 'passo', text3: ' a mais!' }
 ]
 
 const text1 = ref('')
