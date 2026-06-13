@@ -5,9 +5,9 @@
         <MenuIcon size="24" stroke-width="2.5" />
       </button>
       <div class="mascot-header">
-        <img src="../assets/header-hero.jpg" class="peeking-mascot" />
-        <h2>Qual aventura você quer<br>começar hoje?</h2>
-        <p>Escolha o idioma que deseja praticar</p>
+        <img src="../assets/camaleao.png" class="peeking-mascot" />
+        <h2>{{ t('home_title') }}</h2>
+        <p>{{ t('home_subtitle') }}</p>
       </div>
       
       <div class="cards-grid">
@@ -36,15 +36,15 @@
     <nav class="bottom-nav">
       <div class="nav-item active" @click="$emit('navigate', 'home')">
         <HomeIcon size="24" />
-        <span>Início</span>
+        <span>{{ t('nav_home') }}</span>
       </div>
       <div class="nav-item" @click="$emit('navigate', 'conversations')">
         <MessageCircleIcon size="24" />
-        <span>Chats</span>
+        <span>{{ t('nav_chats') }}</span>
       </div>
       <div class="nav-item" @click="$emit('navigate', 'profile')">
         <UserIcon size="24" />
-        <span>Perfil</span>
+        <span>{{ t('nav_profile') }}</span>
       </div>
     </nav>
   </div>
@@ -57,6 +57,7 @@ import {
   User as UserIcon,
   Menu as MenuIcon
 } from '@lucide/vue'
+import { t } from '../data/translations.js'
 
 defineEmits(['selectLanguage', 'openSidebar', 'navigate'])
 </script>

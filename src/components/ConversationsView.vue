@@ -4,23 +4,23 @@
       <button class="menu-btn" @click="$emit('openSidebar')">
         <MenuIcon size="24" stroke-width="2.5" />
       </button>
-      <h2>Conversas</h2>
+      <h2>{{ t('active_chats_title') }}</h2>
     </header>
 
     <div class="content-scroll">
       <!-- Mascot suggestion -->
       <div class="mascot-banner">
-        <img src="../assets/header-hero.jpg" class="banner-mascot" />
+        <img src="../assets/2.png" class="banner-mascot" />
         <div class="banner-text">
-          <strong>Mantenha a prática!</strong>
-          <p>Você tem 2 conversas ativas. Não deixe o fogo apagar!</p>
+          <strong>{{ t('keep_practicing') }}</strong>
+          <p>{{ t('keep_practicing_desc') }}</p>
         </div>
       </div>
 
-      <!-- Chat list -->
+      <!-- Últimas Conversas (Chat list) -->
       <div class="chat-list">
         <div class="chat-item" v-for="(chat, index) in activeChats" :key="chat.id" @click="$emit('openChat')" :style="{ animationDelay: (index * 0.1) + 's' }">
-          <div class="avatar-wrapper" @click.stop="showFriendProfile(chat)">
+          <div class="avatar-wrapper">
             <img :src="chat.avatar" class="chat-avatar" />
             <span class="online-indicator" v-if="chat.online"></span>
           </div>
@@ -32,22 +32,22 @@
             <div class="chat-preview-row">
               <span class="chat-preview">{{ chat.lastMessage }}</span>
               <div class="streak-badge" v-if="chat.streak > 0">
-                <span>🔥 {{ chat.streak }} dias</span>
+                <span style="display: inline-flex; align-items: center; gap: 4px;"><StreakFlame size="16" /> {{ chat.streak }} {{ t('streak_days') }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Pending Requests -->
+      <!-- Convites (Pending Requests) -->
       <div class="section-container" v-if="pendingRequests.length > 0">
-        <h3 class="section-title">Solicitações Pendentes</h3>
+        <h3 class="section-title">{{ t('pending_requests') }}</h3>
         <div class="request-list">
           <div class="request-item" v-for="(req, index) in pendingRequests" :key="req.id" :style="{ animationDelay: (index * 0.1) + 's' }">
-            <img :src="req.avatar" class="req-avatar" @click="showFriendProfile(req)" style="cursor: pointer;" />
-            <div class="req-info" @click="showFriendProfile(req)" style="cursor: pointer;">
+            <img :src="req.avatar" class="req-avatar" />
+            <div class="req-info">
               <span class="req-name">{{ req.name }}</span>
-              <span class="req-desc">Quer praticar com você</span>
+              <span class="req-desc">{{ t('wants_to_practice') }}</span>
             </div>
             <div class="req-actions">
               <button class="accept-btn"><CheckIcon size="18" /></button>
@@ -57,19 +57,35 @@
         </div>
       </div>
 
-      <!-- Recent History -->
+      <!-- Amigos (Enriched Friends List) -->
       <div class="section-container">
-        <h3 class="section-title">Histórico de Conversas</h3>
-        <div class="history-list">
-          <div class="history-item" v-for="(person, index) in recentHistory" :key="person.id" :style="{ animationDelay: ((pendingRequests.length * 0.1) + (index * 0.1)) + 's' }">
-            <img :src="person.avatar" class="hist-avatar" @click="showFriendProfile(person)" style="cursor: pointer;" />
-            <div class="hist-info" @click="showFriendProfile(person)" style="cursor: pointer;">
-              <span class="hist-name">{{ person.name }}</span>
-              <span class="hist-date">{{ person.date }}</span>
+        <h3 class="section-title">{{ t('friends_label') }}</h3>
+        <div class="friends-list-container">
+          <div 
+            class="friend-list-item" 
+            v-for="(friend, index) in friends" 
+            :key="friend.id" 
+            @click="showFriendProfile(friend)"
+            :style="{ animationDelay: (index * 0.05) + 's' }"
+          >
+            <div class="avatar-wrapper">
+              <img :src="friend.avatar" class="friend-list-avatar" />
+              <span class="online-indicator" v-if="friend.online"></span>
             </div>
-            <button class="continue-btn" @click="$emit('openChat')">
-              Continuar
-            </button>
+            <div class="friend-list-info">
+              <div class="friend-name-row">
+                <span class="friend-name">{{ friend.name }}</span>
+                <span class="friend-streak" v-if="friend.streak > 0" style="display: inline-flex; align-items: center; gap: 4px;"><StreakFlame size="14" /> {{ friend.streak }} {{ t('streak_days') }}</span>
+              </div>
+              <div class="friend-meta-row" style="display: flex; align-items: center; gap: 8px;">
+                <span class="friend-lang" style="display: inline-flex; align-items: center; gap: 4px;">
+                  <CountryFlagMap :language="friend.language" size="14" />
+                  {{ friend.language }}
+                </span>
+                <span class="friend-level">• {{ friend.level }}</span>
+              </div>
+            </div>
+            <ChevronRightIcon size="20" class="arrow-icon" />
           </div>
         </div>
       </div>
@@ -95,18 +111,20 @@
               
               <div class="friend-stats-container">
                 <div class="friend-stat-banner streak-banner">
-                  <span class="fire-emoji">🔥</span>
+                  <span class="fire-emoji" style="display: inline-flex;"><StreakFlame size="28" /></span>
                   <div class="banner-info">
-                    <strong>{{ selectedFriend?.streak }} dias</strong>
+                    <strong>{{ selectedFriend?.streak }} {{ t('streak_days') }}</strong>
                     <span>Vocês estão em sequência!</span>
                   </div>
                 </div>
                 
                 <div class="friend-stat-banner lang-banner">
-                  <span class="lang-emoji">🌍</span>
+                  <span class="lang-emoji" style="display: inline-flex;">
+                    <CountryFlagMap :language="selectedFriend?.language" size="32" />
+                  </span>
                   <div class="banner-info">
-                    <strong>Praticando Inglês</strong>
-                    <span>Idioma em foco</span>
+                    <strong>Praticando {{ selectedFriend?.language }}</strong>
+                    <span>Idioma em foco ({{ selectedFriend?.level }})</span>
                   </div>
                 </div>
               </div>
@@ -128,15 +146,15 @@
     <nav class="bottom-nav">
       <div class="nav-item" @click="$emit('navigate', 'home')">
         <HomeIcon size="24" />
-        <span>Início</span>
+        <span>{{ t('nav_home') }}</span>
       </div>
       <div class="nav-item active" @click="$emit('navigate', 'conversations')">
         <MessageCircleIcon size="24" />
-        <span>Chats</span>
+        <span>{{ t('nav_chats') }}</span>
       </div>
       <div class="nav-item" @click="$emit('navigate', 'profile')">
         <UserIcon size="24" />
-        <span>Perfil</span>
+        <span>{{ t('nav_profile') }}</span>
       </div>
     </nav>
   </div>
@@ -150,25 +168,33 @@ import {
   X as XIcon, 
   Home as HomeIcon, 
   MessageCircle as MessageCircleIcon, 
-  User as UserIcon 
+  User as UserIcon,
+  ChevronRight as ChevronRightIcon
 } from '@lucide/vue'
+import { t } from '../data/translations.js'
+import StreakFlame from './StreakFlame.vue'
+import CountryFlagMap from './CountryFlagMap.vue'
 
 const emit = defineEmits(['openSidebar', 'openChat', 'navigate'])
 
 const activeChats = ref([
   { id: 1, name: 'David Smith', avatar: 'https://i.pravatar.cc/150?img=12', online: true, lastMessage: 'That sounds great! See you.', time: '10:45', streak: 7 },
   { id: 2, name: 'Ana Souza', avatar: 'https://i.pravatar.cc/150?img=47', online: false, lastMessage: 'I really love comedies.', time: 'Ontem', streak: 3 },
-  { id: 3, name: 'Carlos', avatar: 'https://i.pravatar.cc/150?img=11', online: true, lastMessage: 'Haha yes, exactly!', time: 'Ontem', streak: 0 }
+  { id: 3, name: 'Carlos Santos', avatar: 'https://i.pravatar.cc/150?img=11', online: true, lastMessage: 'Haha yes, exactly!', time: 'Ontem', streak: 0 }
 ])
 
 const pendingRequests = ref([
-  { id: 1, name: 'Lucas', avatar: 'https://i.pravatar.cc/150?img=33', streak: 5 }
+  { id: 1, name: 'Lucas Lima', avatar: 'https://i.pravatar.cc/150?img=33', streak: 5 }
 ])
 
-const recentHistory = ref([
-  { id: 1, name: 'Marcos', avatar: 'https://i.pravatar.cc/150?img=8', date: 'Hoje', streak: 12 },
-  { id: 2, name: 'Sofia', avatar: 'https://i.pravatar.cc/150?img=9', date: 'Ontem', streak: 8 },
-  { id: 3, name: 'Julia', avatar: 'https://i.pravatar.cc/150?img=5', date: 'Há 2 dias', streak: 4 }
+const friends = ref([
+  { id: 1, name: 'David Smith', avatar: 'https://i.pravatar.cc/150?img=12', streak: 7, language: 'Inglês', level: 'Intermediário', online: true },
+  { id: 2, name: 'Ana Souza', avatar: 'https://i.pravatar.cc/150?img=47', streak: 3, language: 'Espanhol', level: 'Avançado', online: false },
+  { id: 3, name: 'Carlos Santos', avatar: 'https://i.pravatar.cc/150?img=11', streak: 5, language: 'Inglês', level: 'Iniciante', online: true },
+  { id: 4, name: 'Lucas Lima', avatar: 'https://i.pravatar.cc/150?img=33', streak: 5, language: 'Francês', level: 'Intermediário', online: false },
+  { id: 5, name: 'Marcos Oliveira', avatar: 'https://i.pravatar.cc/150?img=8', streak: 12, language: 'Inglês', level: 'Avançado', online: true },
+  { id: 6, name: 'Sofia Ramos', avatar: 'https://i.pravatar.cc/150?img=9', streak: 8, language: 'Espanhol', level: 'Iniciante', online: false },
+  { id: 7, name: 'Julia Costa', avatar: 'https://i.pravatar.cc/150?img=5', streak: 4, language: 'Português', level: 'Intermediário', online: true }
 ])
 
 const selectedFriend = ref(null)
@@ -178,7 +204,9 @@ const showFriendProfile = (person) => {
   selectedFriend.value = {
     name: person.name,
     avatar: person.avatar,
-    streak: person.streak || 5
+    streak: person.streak || 0,
+    language: person.language || 'Inglês',
+    level: person.level || 'Intermediário'
   }
   isFriendProfileOpen.value = true
 }
@@ -189,9 +217,9 @@ const startChatWithFriend = () => {
 }
 
 const unfriendAction = () => {
-  if (confirm(`Tem certeza que deseja desfazer a amizade com ${selectedFriend.value.name}?`)) {
+  if (confirm(t('unfriend_confirm'))) {
     activeChats.value = activeChats.value.filter(c => c.name !== selectedFriend.value.name)
-    recentHistory.value = recentHistory.value.filter(h => h.name !== selectedFriend.value.name)
+    friends.value = friends.value.filter(f => f.name !== selectedFriend.value.name)
     pendingRequests.value = pendingRequests.value.filter(r => r.name !== selectedFriend.value.name)
     isFriendProfileOpen.value = false
   }
@@ -251,8 +279,8 @@ h2 {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding-bottom: 100px;
+  gap: 28px;
+  padding-bottom: 140px; /* Increased bottom padding to prevent bottom nav cut-off */
 }
 
 .mascot-banner {
@@ -268,9 +296,8 @@ h2 {
 .banner-mascot {
   width: 56px;
   height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid white;
+  object-fit: contain;
+  mix-blend-mode: multiply;
 }
 
 .banner-text {
@@ -313,6 +340,7 @@ h2 {
 
 .avatar-wrapper {
   position: relative;
+  flex-shrink: 0;
 }
 
 .chat-avatar {
@@ -390,7 +418,6 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 12px;
 }
 
 .section-title {
@@ -400,7 +427,7 @@ h2 {
   font-weight: 800;
 }
 
-.request-list, .history-list {
+.request-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -475,53 +502,82 @@ h2 {
   cursor: pointer;
 }
 
-.history-item {
+/* Enriched Friends List Styles */
+.friends-list-container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
-  opacity: 0;
-  animation: slideUpFade 0.4s ease forwards;
 }
 
-.hist-avatar {
-  width: 48px;
-  height: 48px;
+.friend-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  opacity: 0;
+  animation: slideUpFade 0.4s ease forwards;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.friend-list-item:active {
+  transform: scale(0.98);
+}
+
+.friend-list-avatar {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.hist-info {
+.friend-list-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
-.hist-name {
-  font-weight: 700;
+.friend-name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friend-name {
+  font-weight: 800;
   color: #1e293b;
-  font-size: 15px;
+  font-size: 16px;
 }
 
-.hist-date {
+.friend-streak {
   font-size: 12px;
-  color: #94a3b8;
+  color: #e11d48;
+  font-weight: 800;
 }
 
-.continue-btn {
-  background: #e0e7ff;
-  color: #1c5bf0;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
+.friend-meta-row {
+  display: flex;
+  gap: 8px;
   font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
+  color: #64748b;
+  font-weight: 600;
 }
 
-.continue-btn:hover {
-  background: #dbeafe;
+.friend-lang {
+  color: #1c5bf0;
+}
+
+.friend-level {
+  color: #64748b;
+}
+
+.arrow-icon {
+  color: #cbd5e1;
 }
 
 /* Bottom Navigation */

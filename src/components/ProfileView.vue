@@ -2,13 +2,11 @@
   <div class="view-container">
     <!-- Header -->
     <header class="header">
-      <button class="back-btn" @click="$emit('goBack')">
-        <ChevronLeftIcon size="24" stroke-width="2.5" />
+      <button class="menu-btn" @click="$emit('openSidebar')">
+        <MenuIcon size="24" stroke-width="2.5" />
       </button>
-      <h2>Meu Perfil</h2>
-      <button class="settings-btn">
-        <SettingsIcon size="24" />
-      </button>
+      <h2>{{ t('my_profile') }}</h2>
+      <div style="width: 40px;"></div> <!-- placeholder to balance header layout -->
     </header>
 
     <div class="content-scroll">
@@ -41,12 +39,12 @@
       <!-- Stats Grid -->
       <div class="stats-grid">
         <div class="stat-card full-width" style="animation-delay: 0.1s">
-          <div class="stat-icon-wrapper fire">
-            <span class="fire-badge-emoji">🔥</span>
+          <div class="stat-icon-wrapper fire" style="display: flex; align-items: center; justify-content: center;">
+            <StreakFlame size="28" />
           </div>
           <div class="stat-info">
-            <span class="stat-value">5 dias de ofensiva</span>
-            <span class="stat-label">Praticando diariamente!</span>
+            <span class="stat-value">5 {{ t('streak_label') }}</span>
+            <span class="stat-label">{{ t('streak_sub') }}</span>
           </div>
         </div>
         
@@ -56,7 +54,7 @@
           </div>
           <div class="stat-info">
             <span class="stat-value">7</span>
-            <span class="stat-label">Amigos</span>
+            <span class="stat-label">{{ t('friends_label') }}</span>
           </div>
         </div>
         
@@ -66,17 +64,60 @@
           </div>
           <div class="stat-info">
             <span class="stat-value">4h 30m</span>
-            <span class="stat-label">Tempo Praticado</span>
+            <span class="stat-label">{{ t('time_practiced') }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Menu Options -->
-      <div class="options-list" style="animation-delay: 0.6s">
-        <div class="option-item">
-          <div class="option-icon-box"><ShieldIcon size="20" /></div>
-          <span>Privacidade e Segurança</span>
-          <ChevronRightIcon size="20" class="option-arrow" />
+      <!-- Menu Options & Settings in Column -->
+      <div class="settings-section">
+        <h3 class="section-title">{{ t('settings_label') }}</h3>
+        
+        <div class="options-list">
+          <div class="option-item" @click="handleSettingAction('reset-password')">
+            <div class="option-icon-box"><LockIcon size="20" /></div>
+            <span>{{ t('reset_password') }}</span>
+            <ChevronRightIcon size="20" class="option-arrow" />
+          </div>
+          
+          <div class="option-item" @click="handleSettingAction('change-email')">
+            <div class="option-icon-box"><MailIcon size="20" /></div>
+            <span>{{ t('change_email') }}</span>
+            <ChevronRightIcon size="20" class="option-arrow" />
+          </div>
+          
+          <div class="option-item-container">
+            <div class="option-item lang-item-select" @click="toggleLangDropdown">
+              <div class="option-icon-box"><GlobeIcon size="20" /></div>
+              <span>{{ t('default_language') }}</span>
+              <div class="select-wrapper">
+                <span class="selected-lang-label">{{ currentLanguageLabel }}</span>
+                <ChevronDownIcon size="20" class="option-arrow" :class="{ 'rotated': isLangDropdownOpen }" />
+              </div>
+            </div>
+            
+            <transition name="fade">
+              <div v-if="isLangDropdownOpen" class="custom-dropdown-panel">
+                <div 
+                  v-for="lang in languages" 
+                  :key="lang.code" 
+                  class="custom-dropdown-item" 
+                  :class="{ 'active': currentLocale === lang.code }"
+                  @click="selectLanguage(lang.code)"
+                >
+                  <img :src="lang.flag" class="lang-flag" />
+                  <span class="lang-name">{{ lang.label }}</span>
+                  <CheckIcon v-if="currentLocale === lang.code" size="18" class="check-icon" />
+                </div>
+              </div>
+            </transition>
+          </div>
+
+          <div class="option-item">
+            <div class="option-icon-box"><ShieldIcon size="20" /></div>
+            <span>{{ t('privacy_and_security') }}</span>
+            <ChevronRightIcon size="20" class="option-arrow" />
+          </div>
         </div>
       </div>
     </div>
@@ -87,7 +128,7 @@
         <transition name="slide-up" appear>
           <div class="friends-modal-container">
             <div class="modal-header">
-              <h3>Meus Amigos</h3>
+              <h3>{{ t('friends_label') }}</h3>
               <button @click="isFriendsModalOpen = false" class="close-btn-round"><XIcon size="20" /></button>
             </div>
             
@@ -96,7 +137,7 @@
                 <img :src="friend.avatar" class="friend-avatar" />
                 <div class="friend-info-row">
                   <span class="friend-name">{{ friend.name }}</span>
-                  <span class="friend-streak">🔥 {{ friend.streak }} dias</span>
+                  <span class="friend-streak" style="display: inline-flex; align-items: center; gap: 4px;"><StreakFlame size="14" /> {{ friend.streak }} {{ t('streak_label').split(' ')[0] }}</span>
                 </div>
                 <button class="view-profile-btn" @click="showFriendProfile(friend)">
                   Ver Perfil
@@ -128,15 +169,17 @@
               
               <div class="friend-stats-container">
                 <div class="friend-stat-banner streak-banner">
-                  <span class="fire-emoji">🔥</span>
+                  <span class="fire-emoji" style="display: inline-flex;"><StreakFlame size="28" /></span>
                   <div class="banner-info">
-                    <strong>{{ selectedFriend?.streak }} dias</strong>
+                    <strong>{{ selectedFriend?.streak }} {{ t('streak_label').split(' ')[0] }}</strong>
                     <span>Vocês estão em sequência!</span>
                   </div>
                 </div>
                 
                 <div class="friend-stat-banner lang-banner">
-                  <span class="lang-emoji">🌍</span>
+                  <span class="lang-emoji" style="display: inline-flex;">
+                    <CountryFlagMap :language="selectedFriend?.language" size="32" />
+                  </span>
                   <div class="banner-info">
                     <strong>Praticando {{ selectedFriend?.language }}</strong>
                     <span>Idioma em foco</span>
@@ -161,28 +204,28 @@
     <nav class="bottom-nav">
       <div class="nav-item" @click="$emit('navigate', 'home')">
         <HomeIcon size="24" />
-        <span>Início</span>
+        <span>{{ t('nav_home') }}</span>
       </div>
       <div class="nav-item" @click="$emit('navigate', 'conversations')">
         <MessageCircleIcon size="24" />
-        <span>Chats</span>
+        <span>{{ t('nav_chats') }}</span>
       </div>
       <div class="nav-item active" @click="$emit('navigate', 'profile')">
         <UserIcon size="24" />
-        <span>Perfil</span>
+        <span>{{ t('nav_profile') }}</span>
       </div>
     </nav>
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import { 
-  ChevronLeftIcon, 
-  SettingsIcon, 
+  Menu as MenuIcon, 
   CameraIcon, 
   ClockIcon, 
   ChevronRightIcon,
+  ChevronDown as ChevronDownIcon,
   UserIcon,
   ShieldIcon,
   Pencil as PencilIcon,
@@ -190,12 +233,34 @@ import {
   Users as UsersIcon,
   X as XIcon,
   Home as HomeIcon,
-  MessageCircle as MessageCircleIcon
+  MessageCircle as MessageCircleIcon,
+  Lock as LockIcon,
+  Mail as MailIcon,
+  Globe as GlobeIcon
 } from '@lucide/vue'
+import { t, currentLocale, setLocale } from '../data/translations.js'
+import StreakFlame from './StreakFlame.vue'
+import CountryFlagMap from './CountryFlagMap.vue'
 
-const emit = defineEmits(['goBack', 'navigate'])
+const emit = defineEmits(['goBack', 'navigate', 'openSidebar'])
 
 const isEditingName = ref(false)
+const isLangDropdownOpen = ref(false)
+const languages = [
+  { code: 'pt', label: 'Português Brasil', flag: 'https://flagcdn.com/w20/br.png' },
+  { code: 'en', label: 'English', flag: 'https://flagcdn.com/w20/us.png' },
+  { code: 'fr', label: 'Français', flag: 'https://flagcdn.com/w20/fr.png' },
+  { code: 'es', label: 'Español', flag: 'https://flagcdn.com/w20/es.png' }
+]
+
+const toggleLangDropdown = () => {
+  isLangDropdownOpen.value = !isLangDropdownOpen.value
+}
+
+const selectLanguage = (code) => {
+  setLocale(code)
+  isLangDropdownOpen.value = false
+}
 const profileName = ref('João Silva')
 const newName = ref('João Silva')
 const nameInputRef = ref(null)
@@ -231,9 +296,9 @@ const friends = ref([
   { id: 2, name: 'Ana Souza', avatar: 'https://i.pravatar.cc/150?img=47', streak: 3, language: 'Espanhol' },
   { id: 3, name: 'Carlos', avatar: 'https://i.pravatar.cc/150?img=11', streak: 5, language: 'Inglês' },
   { id: 4, name: 'Lucas', avatar: 'https://i.pravatar.cc/150?img=33', streak: 5, language: 'Francês' },
-  { id: 5, name: 'Marcos', avatar: 'https://i.pravatar.cc/150?img=8', streak: 12, language: 'Inglês' },
-  { id: 6, name: 'Sofia', avatar: 'https://i.pravatar.cc/150?img=9', streak: 8, language: 'Espanhol' },
-  { id: 7, name: 'Julia', avatar: 'https://i.pravatar.cc/150?img=5', streak: 4, language: 'Português' }
+  { id: 5, name: 'Marcos', avatar: 'https://i.pravatar.cc/8', streak: 12, language: 'Inglês' },
+  { id: 6, name: 'Sofia', avatar: 'https://i.pravatar.cc/9', streak: 8, language: 'Espanhol' },
+  { id: 7, name: 'Julia', avatar: 'https://i.pravatar.cc/5', streak: 4, language: 'Português' }
 ])
 
 const openFriendsModal = () => {
@@ -257,6 +322,25 @@ const unfriendAction = () => {
     isFriendProfileOpen.value = false
   }
 }
+
+const handleSettingAction = (action) => {
+  if (action === 'reset-password') {
+    alert(t('reset_password') + '!')
+  } else if (action === 'change-email') {
+    alert(t('change_email') + '!')
+  }
+}
+
+const changeLang = (event) => {
+  setLocale(event.target.value)
+}
+
+const currentLanguageLabel = computed(() => {
+  if (currentLocale.value === 'en') return 'English'
+  if (currentLocale.value === 'fr') return 'Français'
+  if (currentLocale.value === 'es') return 'Español'
+  return 'Português Brasil'
+})
 </script>
 
 <style scoped>
@@ -266,7 +350,7 @@ const unfriendAction = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #f8fafc;
+  background: #ffffff;
   z-index: 50;
   display: flex;
   flex-direction: column;
@@ -292,7 +376,7 @@ const unfriendAction = () => {
   border-bottom: 1px solid #f1f5f9;
 }
 
-.back-btn, .settings-btn {
+.menu-btn {
   background: none;
   border: none;
   color: #1a235c;
@@ -315,7 +399,7 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 28px;
-  padding-bottom: 100px;
+  padding-bottom: 140px; /* Increased bottom padding to prevent bottom nav cut-off */
 }
 
 .profile-header {
@@ -483,31 +567,40 @@ h2 {
 }
 
 .options-list {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  background: transparent;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  opacity: 0;
-  animation: slideUpFade 0.4s ease forwards;
+  gap: 12px;
+}
+
+.section-title {
+  margin: 0 0 12px 8px;
+  font-size: 16px;
+  color: #1a235c;
+  font-weight: 800;
+  text-align: left;
 }
 
 .option-item {
   display: flex;
   align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid #f1f5f9;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
   cursor: pointer;
-  transition: background 0.2s;
-}
-
-.option-item:last-child {
-  border-bottom: none;
+  transition: all 0.2s;
 }
 
 .option-item:hover {
   background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.option-item:active {
+  transform: scale(0.99);
 }
 
 .option-icon-box {
@@ -524,6 +617,97 @@ h2 {
 
 .option-arrow {
   color: #cbd5e1;
+}
+
+/* Settings Options Styles */
+.lang-item-select {
+  position: relative;
+  cursor: pointer !important;
+}
+
+.setting-icon {
+  color: #1c5bf0;
+  flex-shrink: 0;
+}
+
+.select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-lang-label {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.option-item-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.custom-dropdown-panel {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.custom-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.custom-dropdown-item:hover {
+  background: #f1f5f9;
+}
+
+.custom-dropdown-item.active {
+  background: #e0e7ff;
+  color: #1c5bf0;
+}
+
+.lang-flag {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.lang-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.custom-dropdown-item.active .lang-name {
+  color: #1c5bf0;
+}
+
+.check-icon {
+  color: #1c5bf0;
+}
+
+.option-arrow {
+  transition: transform 0.2s ease;
+}
+
+.option-arrow.rotated {
+  transform: rotate(180deg);
 }
 
 /* Bottom Navigation */

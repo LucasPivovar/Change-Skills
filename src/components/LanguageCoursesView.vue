@@ -4,11 +4,15 @@
       <button class="back-btn" @click="$emit('goBack')">
         <ChevronLeftIcon size="24" stroke-width="2.5" />
       </button>
-      <h2>Selecione um Curso</h2>
     </header>
     
     <div class="content-scroll">
-      <p class="intro-text">Selecione o curso ideal para o seu nível e comece a conversar agora mesmo!</p>
+      <div class="mascot-header">
+        <img src="../assets/camaleao.png" class="peeking-mascot" />
+        <h2>{{ t('select_modality') }}</h2>
+        <p class="subtitle-text">{{ t('select_modality_desc') }}</p>
+      </div>
+
       <div class="course-cards">
         <div 
           class="course-card" 
@@ -23,14 +27,14 @@
               <h3>{{ course.title }}</h3>
               <div class="course-meta">
                 <span v-if="course.metaLabel && course.metaValue">
-                  <UserIcon size="12" /> {{ course.metaLabel }}: {{ course.metaValue }}
+                  <UserIcon size="12" /> {{ t('age_label') }}: {{ course.metaValue }}
                 </span>
                 <span v-else>
-                  <UserIcon size="12" /> Idade: Adultos
+                  <UserIcon size="12" /> {{ t('age_label') }}: Adultos
                 </span>
               </div>
             </div>
-            <button class="select-btn">Começar!</button>
+            <button class="select-btn">{{ t('start_btn') }}</button>
           </div>
         </div>
       </div>
@@ -41,8 +45,9 @@
 <script setup>
 import { computed } from 'vue'
 import { ChevronLeftIcon, UserIcon } from '@lucide/vue'
-import fallbackImg from '../assets/header-hero.jpg'
+import fallbackImg from '../assets/camaleao.png'
 import { coursesData } from '../data/coursesData.js'
+import { t } from '../data/translations.js'
 
 const props = defineProps({
   selectedLanguage: {
@@ -73,7 +78,7 @@ const handleImageError = (event, type) => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #f8fafc;
+  background: #ffffff;
   z-index: 40;
   display: flex;
   flex-direction: column;
@@ -107,26 +112,37 @@ const handleImageError = (event, type) => {
   margin: -8px 16px -8px -8px;
 }
 
-h2 {
-  margin: 0;
-  font-size: 18px;
-  color: #1a235c;
-  font-weight: 800;
-}
-
 .content-scroll {
   flex: 1;
   overflow-y: auto;
   padding: 20px 16px;
 }
 
-.intro-text {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 20px;
-  line-height: 1.4;
-  font-weight: 600;
+.mascot-header {
   text-align: center;
+  margin-bottom: 24px;
+}
+
+.peeking-mascot {
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: -4px;
+  margin-top: -20px;
+}
+
+.mascot-header h2 {
+  font-size: 24px;
+  color: #1a235c;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.subtitle-text {
+  color: #5c6b8a;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
 }
 
 .course-cards {

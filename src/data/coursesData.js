@@ -61,7 +61,7 @@ export const coursesData = {
       metaLabel: "Idade",
       metaValue: "50+",
       desc: "Curso desenvolvido para adults que desejam aprender inglês de forma leve, prática e personalizada para viagens e conversação.",
-      image: new URL('../assets/cards/ENG ADULT.webp', import.meta.url).href
+      image: new URL('../assets/50+.png', import.meta.url).href
     }
   ],
   es: [

@@ -110,7 +110,7 @@ const handleNavigation = (route) => {
     <ChatView 
       v-if="currentForm === 'chat' || currentForm === 'saved-chat'" 
       :isSaved="currentForm === 'saved-chat'"
-      @goBack="currentForm === 'saved-chat' ? currentForm = 'conversations' : currentForm = 'course-mode'"
+      @goBack="currentForm = 'language-courses'"
       @newPartner="currentForm = 'course-mode'"
       @continueChat="currentForm = 'home'"
     />
@@ -119,14 +119,14 @@ const handleNavigation = (route) => {
   <transition name="fade">
     <GroupChatView 
       v-if="currentForm === 'group-chat'" 
-      @goBack="currentForm = 'course-mode'"
+      @goBack="currentForm = 'language-courses'"
     />
   </transition>
 
   <transition name="fade">
     <MascotChatView 
       v-if="currentForm === 'mascot-chat'" 
-      @goBack="currentForm = 'course-mode'"
+      @goBack="currentForm = 'language-courses'"
       @newPartner="currentForm = 'course-mode'"
     />
   </transition>
@@ -145,6 +145,7 @@ const handleNavigation = (route) => {
       v-if="currentForm === 'profile'"
       @goBack="currentForm = 'home'"
       @navigate="handleNavigation"
+      @openSidebar="isSidebarOpen = true"
     />
   </transition>
 </template>

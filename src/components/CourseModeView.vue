@@ -11,11 +11,11 @@
         <div class="mode-content">
           <div class="mascot-header-row">
             <div class="text-col">
-              <h2>Como você quer<br>praticar hoje?</h2>
-              <p class="subtitle-text">Escolha uma modalidade abaixo para iniciar a sua conversação no idioma!</p>
+              <h2>{{ t('how_to_practice') }}</h2>
+              <p class="subtitle-text">{{ t('practice_desc') }}</p>
             </div>
             <div class="img-col">
-              <img src="../assets/header-hero.jpg" class="peeking-mascot" />
+              <img src="../assets/camaleao.png" class="peeking-mascot" />
             </div>
           </div>
           
@@ -26,19 +26,19 @@
                 <MessageCircleIcon size="16" class="badge-icon badge-solo" />
               </div>
               <div class="option-text">
-                <h3>Conversa com 1 pessoa</h3>
-                <p>Encontre um parceiro do seu nível</p>
+                <h3>{{ t('solo_title') }}</h3>
+                <p>{{ t('solo_desc') }}</p>
               </div>
               <ChevronRightIcon class="arrow-icon" size="24" stroke-width="2.5" />
             </div>
 
             <div class="option-card mascot-card" @click="selectMode('mascot')">
-              <div class="icon-wrapper mascot-icon-wrapper">
-                <BotIcon size="32" class="main-icon" />
+              <div class="icon-wrapper mascot-icon-wrapper" style="overflow: hidden; padding: 0;">
+                <img src="../assets/2.png" style="width: 100%; height: 100%; object-fit: cover;" class="main-icon" />
               </div>
               <div class="option-text">
-                <h3>Conversa com IA</h3>
-                <p>Pratique conversação com nossa inteligência artificial</p>
+                <h3>{{ t('ia_title') }}</h3>
+                <p>{{ t('ia_desc') }}</p>
               </div>
               <ChevronRightIcon class="arrow-icon" size="24" stroke-width="2.5" />
             </div>
@@ -57,6 +57,7 @@
 
 <script setup>
 import { X as XIcon, Users as UsersIcon, MessageCircle as MessageCircleIcon, Bot as BotIcon, ChevronRight as ChevronRightIcon } from '@lucide/vue'
+import { t } from '../data/translations.js'
 
 const emit = defineEmits(['goBack', 'selectMode'])
 
@@ -305,3 +306,4 @@ const selectMode = (mode) => {
   }
 }
 </style>
+

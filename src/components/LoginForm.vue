@@ -3,12 +3,12 @@
     <form @submit.prevent="handleLogin" class="login-form">
       <div class="input-group">
         <UserIcon class="input-icon" size="20" />
-        <input type="text" placeholder="Email ou usuário" v-model="username" required />
+        <input type="text" :placeholder="t('email_or_user')" v-model="username" required />
       </div>
 
       <div class="input-group">
         <LockIcon class="input-icon" size="20" />
-        <input :type="showPassword ? 'text' : 'password'" placeholder="Senha" v-model="password" required />
+        <input :type="showPassword ? 'text' : 'password'" :placeholder="t('password')" v-model="password" required />
         <button type="button" class="toggle-password" @click="showPassword = !showPassword">
           <EyeIcon v-if="!showPassword" size="20" />
           <EyeOffIcon v-else size="20" />
@@ -16,13 +16,13 @@
       </div>
 
       <div class="forgot-password">
-        <a href="#" @click.prevent="$emit('goToForgot')">Esqueci minha senha</a>
+        <a href="#" @click.prevent="$emit('goToForgot')">{{ t('forgot_password') }}</a>
       </div>
 
-      <button type="submit" class="btn-primary">Entrar</button>
+      <button type="submit" class="btn-primary">{{ t('login_btn') }}</button>
 
       <div class="register-link">
-        Ainda não tem uma conta? <a href="#" @click.prevent="$emit('goToRegister')">Cadastre-se</a>
+        {{ t('dont_have_account') }} <a href="#" @click.prevent="$emit('goToRegister')">{{ t('register_now') }}</a>
       </div>
     </form>
   </div>
@@ -31,6 +31,7 @@
 <script setup>
 import { ref } from 'vue'
 import { User as UserIcon, Lock as LockIcon, Eye as EyeIcon, EyeOff as EyeOffIcon } from '@lucide/vue'
+import { t } from '../data/translations.js'
 
 const emit = defineEmits(['goToRegister', 'goToForgot', 'loginSuccess'])
 

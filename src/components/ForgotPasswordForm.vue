@@ -2,17 +2,17 @@
   <div class="login-container">
 
     <form @submit.prevent="handleRecover" class="login-form">
-      <p class="description">Digite seu email e enviaremos um link para você redefinir sua senha.</p>
+      <p class="description">{{ t('forgot_desc') }}</p>
       
       <div class="input-group">
         <MailIcon class="input-icon" size="20" />
         <input type="email" placeholder="Email" v-model="email" required />
       </div>
 
-      <button type="submit" class="btn-primary">Enviar Link</button>
+      <button type="submit" class="btn-primary">{{ t('send_link') }}</button>
 
       <div class="register-link">
-        Lembrou da senha? <a href="#" @click.prevent="$emit('goToLogin')">Entrar</a>
+        {{ t('remembered_password') }} <a href="#" @click.prevent="$emit('goToLogin')">{{ t('login_btn') }}</a>
       </div>
     </form>
   </div>
@@ -21,6 +21,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Mail as MailIcon } from '@lucide/vue'
+import { t } from '../data/translations.js'
 
 defineEmits(['goToLogin'])
 

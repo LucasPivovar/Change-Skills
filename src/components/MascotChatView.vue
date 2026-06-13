@@ -7,7 +7,7 @@
       </button>
       <div class="user-info">
         <div class="mascot-avatar-wrapper">
-          <img src="../assets/header-hero.jpg" alt="Camaleão IA" class="avatar" />
+          <img src="../assets/2.png" alt="Camaleão IA" class="avatar" />
         </div>
         <span class="user-name">Camaleão IA</span>
       </div>
@@ -51,7 +51,7 @@
           </div>
         </div>
         
-        <img src="../assets/header-hero.jpg" class="mission-mascot" />
+        <img src="../assets/2.png" class="mission-mascot" />
       </div>
     </div>
 
@@ -65,7 +65,7 @@
           :class="['message-row', msg.isMine ? 'mine' : 'theirs']"
         >
           <div v-if="!msg.isMine" class="bot-avatar-wrapper">
-            <img src="../assets/header-hero.jpg" class="msg-avatar" />
+            <img src="../assets/2.png" class="msg-avatar" />
           </div>
           
           <div class="message-bubble" :class="msg.isMine ? 'bubble-mine' : 'bubble-bot'">

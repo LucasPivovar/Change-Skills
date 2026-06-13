@@ -1,12 +1,12 @@
 <template>
   <div class="language-selector">
     <button @click="toggleMenu" class="lang-btn">
-      <img src="https://flagcdn.com/w20/br.png" alt="Brasil Flag" class="flag-icon" />
-      <span>Português Brasil</span>
+      <img :src="currentLanguageData.flag" alt="Flag" class="flag-icon" />
+      <span>{{ currentLanguageData.label }}</span>
       <ChevronDownIcon size="16" />
     </button>
     <div v-if="isOpen" class="dropdown">
-      <button v-for="lang in languages" :key="lang.code" @click="selectLanguage(lang)" class="lang-item">
+      <button v-for="lang in languages" :key="lang.code" @click="selectLanguage(lang.code)" class="lang-item">
         <img :src="lang.flag" alt="Flag" class="flag-icon-small" />
         {{ lang.label }}
       </button>
@@ -15,8 +15,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { ChevronDown as ChevronDownIcon } from '@lucide/vue'
+import { currentLocale, setLocale } from '../data/translations.js'
 
 const isOpen = ref(false)
 const languages = [
@@ -26,13 +27,17 @@ const languages = [
   { code: 'es', label: 'Español', flag: 'https://flagcdn.com/w20/es.png' }
 ]
 
+const currentLanguageData = computed(() => {
+  return languages.find(l => l.code === currentLocale.value) || languages[0]
+})
+
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
 
-const selectLanguage = (lang) => {
+const selectLanguage = (code) => {
   isOpen.value = false
-  // For now, only Portuguese is fully supported as requested
+  setLocale(code)
 }
 </script>
 
@@ -52,7 +57,7 @@ const selectLanguage = (lang) => {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--primary-blue);
+  color: #1c5bf0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   transition: transform 0.2s;
   cursor: pointer;
@@ -99,11 +104,13 @@ const selectLanguage = (lang) => {
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: var(--text-dark);
+  color: #1e293b;
+  cursor: pointer;
+  width: 100%;
 }
 
 .lang-item:hover {
   background: #f5f8ff;
-  color: var(--primary-blue);
+  color: #1c5bf0;
 }
 </style>
