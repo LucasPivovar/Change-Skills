@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import LanguageSelector from './components/LanguageSelector.vue'
 import HeroSection from './components/HeroSection.vue'
 import LoginForm from './components/LoginForm.vue'
@@ -48,6 +48,19 @@ const handleNavigation = (route) => {
   } else {
     currentForm.value = route
   }
+}
+
+const lastForm = ref('home')
+
+watch(currentForm, (newVal) => {
+  const chatViews = ['chat', 'saved-chat', 'group-chat', 'mascot-chat']
+  if (!chatViews.includes(newVal)) {
+    lastForm.value = newVal
+  }
+})
+
+const handleGoBack = () => {
+  currentForm.value = lastForm.value
 }
 </script>
 
@@ -110,7 +123,7 @@ const handleNavigation = (route) => {
     <ChatView 
       v-if="currentForm === 'chat' || currentForm === 'saved-chat'" 
       :isSaved="currentForm === 'saved-chat'"
-      @goBack="currentForm = 'language-courses'"
+      @goBack="handleGoBack"
       @newPartner="currentForm = 'course-mode'"
       @continueChat="currentForm = 'home'"
     />
@@ -119,14 +132,14 @@ const handleNavigation = (route) => {
   <transition name="fade">
     <GroupChatView 
       v-if="currentForm === 'group-chat'" 
-      @goBack="currentForm = 'language-courses'"
+      @goBack="handleGoBack"
     />
   </transition>
 
   <transition name="fade">
     <MascotChatView 
       v-if="currentForm === 'mascot-chat'" 
-      @goBack="currentForm = 'language-courses'"
+      @goBack="handleGoBack"
       @newPartner="currentForm = 'course-mode'"
     />
   </transition>

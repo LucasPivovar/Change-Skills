@@ -20,46 +20,6 @@
         </div>
       </div>
 
-      <!-- Últimas Conversas (Chat list) -->
-      <div class="chat-list">
-        <div class="chat-item" v-for="(chat, index) in activeChats" :key="chat.id" @click="$emit('openChat')" :style="{ animationDelay: (index * 0.1) + 's' }">
-          <div class="avatar-wrapper">
-            <img :src="chat.avatar" class="chat-avatar" />
-            <span class="online-indicator" v-if="chat.online"></span>
-          </div>
-          <div class="chat-info">
-            <div class="chat-header-row">
-              <span class="chat-name">{{ chat.name }}</span>
-              <span class="chat-time">{{ chat.time }}</span>
-            </div>
-            <div class="chat-preview-row">
-              <span class="chat-preview">{{ chat.lastMessage }}</span>
-              <div class="streak-badge" v-if="chat.streak > 0">
-                <span style="display: inline-flex; align-items: center; gap: 4px;"><StreakFlame size="16" /> {{ chat.streak }} {{ t('streak_days') }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Convites (Pending Requests) -->
-      <div class="section-container" v-if="pendingRequests.length > 0">
-        <h3 class="section-title">{{ t('pending_requests') }}</h3>
-        <div class="request-list">
-          <div class="request-item" v-for="(req, index) in pendingRequests" :key="req.id" :style="{ animationDelay: (index * 0.1) + 's' }">
-            <img :src="req.avatar" class="req-avatar" />
-            <div class="req-info">
-              <span class="req-name">{{ req.name }}</span>
-              <span class="req-desc">{{ t('wants_to_practice') }}</span>
-            </div>
-            <div class="req-actions">
-              <button class="accept-btn"><CheckIcon size="18" /></button>
-              <button class="reject-btn"><XIcon size="18" /></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Amigos (Enriched Friends List) -->
       <div class="section-container">
         <h3 class="section-title">{{ t('friends_label') }}</h3>
@@ -89,6 +49,55 @@
               </div>
             </div>
             <ChevronRightIcon size="20" class="arrow-icon" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Convites (Pending Requests) -->
+      <div class="section-container" v-if="pendingRequests.length > 0">
+        <h3 class="section-title">{{ t('pending_requests') }}</h3>
+        <div class="request-list">
+          <div class="request-item" v-for="(req, index) in pendingRequests" :key="req.id" :style="{ animationDelay: (index * 0.1) + 's' }">
+            <img :src="req.avatar" class="req-avatar" />
+            <div class="req-info">
+              <span class="req-name">{{ req.name }}</span>
+              <span class="req-desc">{{ t('wants_to_practice') }}</span>
+            </div>
+            <div class="req-actions">
+              <button class="accept-btn" @click.stop="handleAcceptRequest(req)"><CheckIcon size="18" /></button>
+              <button class="reject-btn" @click.stop="handleRejectRequest(req)"><XIcon size="18" /></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Últimas Conversas (Recent Chats) -->
+      <div class="section-container">
+        <h3 class="section-title">{{ t('active_chats_title') }}</h3>
+        <div class="chat-list">
+          <div class="chat-item" v-for="(chat, index) in activeChats" :key="chat.id" @click="$emit('openChat')" :style="{ animationDelay: (index * 0.1) + 's' }">
+            <div class="avatar-wrapper">
+              <img :src="chat.avatar" class="chat-avatar" />
+              <span class="online-indicator" v-if="chat.online"></span>
+            </div>
+            <div class="chat-info">
+              <div class="chat-header-row">
+                <span class="chat-name">{{ chat.name }}</span>
+                <span class="chat-time">{{ chat.time }}</span>
+              </div>
+              <div class="chat-preview-row">
+                <span class="chat-preview">{{ chat.lastMessage }}</span>
+                <div class="streak-badge" v-if="chat.streak > 0">
+                  <span style="display: inline-flex; align-items: center; gap: 4px;"><StreakFlame size="16" /> {{ chat.streak }} {{ t('streak_days') }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="chat-action">
+              <span v-if="sentRequests.includes(chat.id)" class="request-sent-badge">Solicitado</span>
+              <button v-else class="continue-conversa-btn" @click.stop="handleContinueChat(chat)">
+                {{ t('continue_btn') }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -140,6 +149,24 @@
                 Desfazer Amizade
               </button>
             </div>
+          </div>
+        </transition>
+      </div>
+    </transition>
+
+    <!-- Success Request Modal -->
+    <transition name="fade">
+      <div class="modal-backdrop-center" v-if="isSuccessModalOpen" @click.self="isSuccessModalOpen = false">
+        <transition name="slide-up" appear>
+          <div class="success-modal-container">
+            <div class="success-icon-wrapper">
+              <CheckIcon size="32" class="success-check-icon" />
+            </div>
+            <h3 class="success-modal-title">Sucesso</h3>
+            <p class="success-modal-text">Sua solicitação foi enviada com sucesso!</p>
+            <button class="modal-close-btn" @click="isSuccessModalOpen = false">
+              {{ t('close') }}
+            </button>
           </div>
         </transition>
       </div>
@@ -226,6 +253,35 @@ const unfriendAction = () => {
     pendingRequests.value = pendingRequests.value.filter(r => r.name !== selectedFriend.value.name)
     isFriendProfileOpen.value = false
   }
+}
+
+const sentRequests = ref([])
+const isSuccessModalOpen = ref(false)
+
+const handleContinueChat = (chat) => {
+  sentRequests.value.push(chat.id)
+  isSuccessModalOpen.value = true
+}
+
+const handleAcceptRequest = (req) => {
+  if (!friends.value.some(f => f.name === req.name)) {
+    friends.value.push({
+      id: Date.now(),
+      name: req.name,
+      avatar: req.avatar,
+      streak: req.streak || 0,
+      language: 'Inglês',
+      level: 'Intermediário',
+      online: true
+    })
+  }
+  pendingRequests.value = pendingRequests.value.filter(r => r.id !== req.id)
+  alert(`Convite de ${req.name} aceito!`)
+}
+
+const handleRejectRequest = (req) => {
+  pendingRequests.value = pendingRequests.value.filter(r => r.id !== req.id)
+  alert(`Convite de ${req.name} recusado.`)
 }
 </script>
 
@@ -821,5 +877,118 @@ const unfriendAction = () => {
 .slide-up-enter-from,
 .slide-up-leave-to {
   transform: translateY(100%);
+}
+
+.chat-action {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.continue-conversa-btn {
+  background-color: #1c5bf0;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(28, 91, 240, 0.15);
+}
+
+.continue-conversa-btn:hover {
+  background-color: #1546b8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(28, 91, 240, 0.25);
+}
+
+.continue-conversa-btn:active {
+  transform: scale(0.96);
+}
+
+.request-sent-badge {
+  background-color: #f1f5f9;
+  color: #64748b;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-backdrop-center {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-modal-container {
+  width: 90%;
+  max-width: 360px;
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px;
+  text-align: center;
+  z-index: 210;
+}
+
+.success-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #dcfce7;
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.success-check-icon {
+  stroke-width: 3;
+}
+
+.success-modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+.success-modal-text {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.modal-close-btn {
+  background: #1c5bf0;
+  color: white;
+  border: none;
+  border-radius: 100px;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #1546b8;
 }
 </style>

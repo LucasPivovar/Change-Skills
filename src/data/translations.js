@@ -64,7 +64,7 @@ export const translations = {
     pending_requests: "Convites",
     wants_to_practice: "Quer praticar com você",
     conversation_history: "Histórico de Conversas",
-    continue_btn: "Continuar",
+    continue_btn: "Conectar",
     unfriend_confirm: "Tem certeza que deseja desfazer a amizade?",
     streak_days: "dias"
   },
@@ -115,7 +115,7 @@ export const translations = {
     pending_requests: "Invitations",
     wants_to_practice: "Wants to practice with you",
     conversation_history: "Chat History",
-    continue_btn: "Continue",
+    continue_btn: "Connect",
     unfriend_confirm: "Are you sure you want to unfriend?",
     streak_days: "days"
   },
@@ -166,7 +166,7 @@ export const translations = {
     pending_requests: "Invitaciones",
     wants_to_practice: "Quiere practicar contigo",
     conversation_history: "Historial de Chats",
-    continue_btn: "Continuar",
+    continue_btn: "Conectar",
     unfriend_confirm: "¿Estás seguro de que quieres deshacer la amistad?",
     streak_days: "días"
   },
@@ -217,7 +217,7 @@ export const translations = {
     pending_requests: "Invitations",
     wants_to_practice: "Veut pratiquer avec vous",
     conversation_history: "Historique des Chats",
-    continue_btn: "Continuer",
+    continue_btn: "Connecter",
     unfriend_confirm: "Êtes-vous sûr de vouloir supprimer l'ami ?",
     streak_days: "jours"
   }
