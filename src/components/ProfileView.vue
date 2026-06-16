@@ -747,10 +747,12 @@ const currentLanguageLabel = computed(() => {
   background: white;
   border-top: 1px solid #e2e8f0;
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  max-width: 480px;
   z-index: 50;
 }
 
