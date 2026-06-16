@@ -56,3 +56,16 @@ button {
 input {
   font-family: inherit;
 }
+
+/* Hide visual scrollbars globally to mimic a native app feel while preserving scrolling functionality */
+::-webkit-scrollbar {
+  display: none;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

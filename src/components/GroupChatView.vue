@@ -309,6 +309,16 @@ const sendMessage = () => {
   flex-direction: column;
 }
 
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 .messages-list {
   display: flex;
   flex-direction: column;
@@ -319,14 +329,17 @@ const sendMessage = () => {
   display: flex;
   align-items: flex-end;
   gap: 8px;
+  opacity: 0;
 }
 
 .message-row.mine {
   justify-content: flex-end;
+  animation: slideInRight 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .message-row.theirs {
   justify-content: flex-start;
+  animation: slideInLeft 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .msg-avatar {

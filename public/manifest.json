@@ -1,0 +1,22 @@
+{
+  "name": "Change Skills",
+  "short_name": "Change Skills",
+  "description": "Pratique e aprenda novos idiomas por meio de conversação em tempo real.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1c5bf0",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -89,7 +89,7 @@ const handleNavigation = (route) => {
     />
   </transition>
 
-  <transition name="fade">
+  <transition name="slide-up">
     <LanguageCoursesView 
       v-if="currentForm === 'language-courses'" 
       :selectedLanguage="selectedLanguage"
@@ -98,7 +98,7 @@ const handleNavigation = (route) => {
     />
   </transition>
 
-  <transition name="fade">
+  <transition name="slide-up">
     <CourseModeView 
       v-if="currentForm === 'course-mode'" 
       @goBack="currentForm = 'language-courses'"
@@ -152,22 +152,43 @@ const handleNavigation = (route) => {
 
 <style scoped>
 .slide-fade-enter-active {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.slide-fade-enter-from,
+.slide-fade-enter-from {
+  transform: translateY(30px) scale(0.95);
+  opacity: 0;
+}
 .slide-fade-leave-to {
-  transform: translateY(20px);
+  transform: translateY(-30px) scale(0.95);
   opacity: 0;
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.fade-enter-from,
+.fade-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
 .fade-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* Slide Up transition for Modality selection */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.slide-up-enter-from {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.slide-up-leave-to {
+  transform: translateY(100%);
   opacity: 0;
 }
 </style>

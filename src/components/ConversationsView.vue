@@ -1,10 +1,13 @@
 <template>
   <div class="view-container">
-    <header class="header">
+    <header class="app-header">
+      <div class="header-logo-container" @click="$emit('navigate', 'home')" style="cursor: pointer;">
+        <img src="../assets/img/logo-change.png" class="header-logo" alt="Change" />
+      </div>
+      <h2 class="header-title">{{ t('nav_chats') }}</h2>
       <button class="menu-btn" @click="$emit('openSidebar')">
         <MenuIcon size="24" stroke-width="2.5" />
       </button>
-      <h2>{{ t('active_chats_title') }}</h2>
     </header>
 
     <div class="content-scroll">
@@ -145,15 +148,15 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
       <div class="nav-item" @click="$emit('navigate', 'home')">
-        <HomeIcon size="24" />
+        <HomeIcon size="28" />
         <span>{{ t('nav_home') }}</span>
       </div>
       <div class="nav-item active" @click="$emit('navigate', 'conversations')">
-        <MessageCircleIcon size="24" />
+        <MessageCircleIcon size="28" />
         <span>{{ t('nav_chats') }}</span>
       </div>
       <div class="nav-item" @click="$emit('navigate', 'profile')">
-        <UserIcon size="24" />
+        <UserIcon size="28" />
         <span>{{ t('nav_profile') }}</span>
       </div>
     </nav>
@@ -250,11 +253,39 @@ const unfriendAction = () => {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.header {
+.app-header {
   display: flex;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #f1f5f9;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  width: 100%;
+  height: 64px;
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.header-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  height: 42px;
+  object-fit: contain;
+}
+
+.header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 18px;
+  color: #1a235c;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .menu-btn {
@@ -262,15 +293,15 @@ const unfriendAction = () => {
   border: none;
   color: #1a235c;
   cursor: pointer;
-  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px;
+  transition: transform 0.2s;
 }
 
-h2 {
-  margin: 0;
-  font-size: 20px;
-  color: #1a235c;
-  font-weight: 800;
+.menu-btn:active {
+  transform: scale(0.95);
 }
 
 .content-scroll {
@@ -584,10 +615,11 @@ h2 {
 .bottom-nav {
   display: flex;
   justify-content: space-around;
-  padding: 12px 20px;
+  align-items: center; /* Center items vertically */
+  height: 72px; /* Fixed height for vertical centering */
   background: white;
   border-top: 1px solid #e2e8f0;
-  padding-bottom: calc(env(safe-area-inset-bottom, 12px) + 24px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -599,10 +631,12 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 2px;
   color: #94a3b8;
   cursor: pointer;
   transition: color 0.2s;
+  height: 100%;
 }
 
 .nav-item.active {
