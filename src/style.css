@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary-blue: #1c5bf0; /* From the button */
-  --text-dark: #111111; /* Darker font */
-  --text-light: #444444; /* Darker secondary text */
+  --primary-blue: #1c5bf0;
+  /* From the button */
+  --text-dark: #111111;
+  /* Darker font */
+  --text-light: #444444;
+  /* Darker secondary text */
   --bg-gradient: linear-gradient(180deg, #e6f0fa 0%, #c8def5 100%);
   --white: #ffffff;
-  --border-color: #b3b3b3; /* Darker borders */
+  --border-color: #b3b3b3;
+  /* Darker borders */
 }
 
 * {
@@ -27,21 +31,23 @@ body {
 
 #app {
   width: 100%;
-  max-width: 480px; /* Mobile only wrapper */
+  max-width: 480px;
+  /* Mobile only wrapper */
   min-height: 100vh;
   position: relative;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .auth-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #dbeafe; /* fallback color matching the sky */
-  background-image: url('./assets/camaleao.png');
+  background-color: #dbeafe;
+  /* fallback color matching the sky */
+  background-image: url('./assets/chameleon.png');
   background-size: 110% auto;
   background-position: center 30%;
   background-repeat: no-repeat;
@@ -66,6 +72,8 @@ input {
 }
 
 * {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
