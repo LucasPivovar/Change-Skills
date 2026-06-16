@@ -41,7 +41,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background-color: #dbeafe; /* fallback color matching the sky */
-  background-image: url('./assets/bg-hero.jpg');
+  background-image: url('./assets/camaleao.png');
   background-size: 110% auto;
   background-position: center 30%;
   background-repeat: no-repeat;
