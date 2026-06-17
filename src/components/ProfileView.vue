@@ -2,13 +2,10 @@
   <div class="view-container">
     <!-- Header -->
     <header class="app-header">
-      <div class="header-logo-container" @click="$emit('navigate', 'home')" style="cursor: pointer;">
-        <img src="../assets/img/logo-change.png" class="header-logo" alt="Change" />
-      </div>
-      <h2 class="header-title">{{ t('nav_profile') }}</h2>
       <button class="menu-btn" @click="$emit('openSidebar')">
         <MenuIcon size="24" stroke-width="2.5" />
       </button>
+      <h2 class="header-title">{{ t('nav_profile') }}</h2>
     </header>
 
     <div class="content-scroll">
@@ -115,9 +112,9 @@
             </transition>
           </div>
 
-          <div class="option-item">
+          <div class="option-item" @click="handleSettingAction('terms-and-privacy')">
             <div class="option-icon-box"><ShieldIcon size="20" /></div>
-            <span>{{ t('privacy_and_security') }}</span>
+            <span>Privacidade e Termos</span>
             <ChevronRightIcon size="20" class="option-arrow" />
           </div>
         </div>
@@ -202,6 +199,134 @@
       </div>
     </transition>
 
+    <!-- Change Email Modal -->
+    <transition name="fade">
+      <div class="modal-backdrop" v-if="isChangeEmailOpen" @click.self="closeChangeEmail">
+        <transition name="slide-up" appear>
+          <div class="profile-modal-container email-modal">
+            <div class="modal-header">
+              <h3>Alterar E-mail</h3>
+              <button @click="closeChangeEmail" class="close-btn-round"><XIcon size="20" /></button>
+            </div>
+
+            <div class="profile-modal-content" style="padding-bottom: 24px; width: 100%;">
+              <div v-if="changeEmailStep === 1" class="modal-flow-step">
+                <p class="modal-instruction-text">
+                  Digite seu novo endereço de e-mail abaixo.
+                </p>
+                <div class="modal-input-group">
+                  <MailIcon size="20" class="input-icon" />
+                  <input 
+                    type="email" 
+                    placeholder="Novo e-mail" 
+                    v-model="newEmail" 
+                    class="modal-text-input"
+                    required
+                  />
+                </div>
+                <div class="modal-error-message" v-if="emailError">{{ emailError }}</div>
+                <button class="modal-action-btn" @click="submitNewEmail">
+                  Salvar Novo E-mail
+                </button>
+              </div>
+
+              <div v-else-if="changeEmailStep === 2" class="modal-flow-step success-step">
+                <div class="success-icon-wrapper">
+                  <CheckIcon size="36" class="success-check-icon" />
+                </div>
+                <h4 class="success-step-title">E-mail Alterado!</h4>
+                <p class="success-step-text">
+                  Seu endereço de e-mail foi atualizado com sucesso.
+                </p>
+                <button class="modal-action-btn success-btn" @click="closeChangeEmail">
+                  Concluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </transition>
+
+    <!-- Change Password Modal -->
+    <transition name="fade">
+      <div class="modal-backdrop" v-if="isChangePasswordOpen" @click.self="closeChangePassword">
+        <transition name="slide-up" appear>
+          <div class="profile-modal-container password-modal">
+            <div class="modal-header">
+              <h3>Redefinir Senha</h3>
+              <button @click="closeChangePassword" class="close-btn-round"><XIcon size="20" /></button>
+            </div>
+
+            <div class="profile-modal-content" style="padding-bottom: 24px; width: 100%;">
+              <div v-if="changePasswordStep === 1" class="modal-flow-step">
+                <p class="modal-instruction-text">
+                  Defina sua nova senha de acesso.
+                </p>
+                <div class="modal-input-group" style="margin-bottom: 12px;">
+                  <LockIcon size="20" class="input-icon" />
+                  <input 
+                    type="password" 
+                    placeholder="Nova senha" 
+                    v-model="newPassword" 
+                    class="modal-text-input"
+                    required
+                  />
+                </div>
+                <div class="modal-input-group">
+                  <LockIcon size="20" class="input-icon" />
+                  <input 
+                    type="password" 
+                    placeholder="Confirmar nova senha" 
+                    v-model="confirmPassword" 
+                    class="modal-text-input"
+                    required
+                  />
+                </div>
+                <div class="modal-error-message" v-if="passwordError">{{ passwordError }}</div>
+                <button class="modal-action-btn" @click="submitNewPassword">
+                  Avançar
+                </button>
+              </div>
+
+              <div v-else-if="changePasswordStep === 2" class="modal-flow-step">
+                <p class="modal-instruction-text">
+                  Enviamos um código de verificação para o seu e-mail. Insira-o abaixo para confirmar a alteração.
+                </p>
+                <div class="modal-input-group code-input-group">
+                  <input 
+                    type="text" 
+                    placeholder="Código" 
+                    v-model="verificationCode" 
+                    class="modal-text-input code-input"
+                    maxlength="6"
+                    required
+                  />
+                </div>
+                <div class="modal-error-message" v-if="codeError">{{ codeError }}</div>
+                <button class="modal-action-btn" @click="submitVerificationCode">
+                  Confirmar Código
+                </button>
+              </div>
+
+              <div v-else-if="changePasswordStep === 3" class="modal-flow-step success-step">
+                <div class="success-icon-wrapper">
+                  <CheckIcon size="36" class="success-check-icon" />
+                </div>
+                <h4 class="success-step-title">Senha Redefinida!</h4>
+                <p class="success-step-text">
+                  Sua senha de acesso foi atualizada com sucesso.
+                </p>
+                <button class="modal-action-btn success-btn" @click="closeChangePassword">
+                  Concluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </transition>
+
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
       <div class="nav-item" @click="$emit('navigate', 'home')">
@@ -238,7 +363,8 @@ import {
   MessageCircle as MessageCircleIcon,
   Lock as LockIcon,
   Mail as MailIcon,
-  Globe as GlobeIcon
+  Globe as GlobeIcon,
+  FileText as FileTextIcon
 } from '@lucide/vue'
 import { t, currentLocale, setLocale } from '../data/translations.js'
 import StreakFlame from './StreakFlame.vue'
@@ -325,11 +451,89 @@ const unfriendAction = () => {
   }
 }
 
+// Change Email state
+const isChangeEmailOpen = ref(false)
+const changeEmailStep = ref(1)
+const newEmail = ref('')
+const emailError = ref('')
+
+const closeChangeEmail = () => {
+  isChangeEmailOpen.value = false
+  changeEmailStep.value = 1
+  newEmail.value = ''
+  emailError.value = ''
+}
+
+const submitNewEmail = () => {
+  emailError.value = ''
+  if (!newEmail.value.trim()) {
+    emailError.value = 'Por favor, digite um e-mail válido.'
+    return
+  }
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailPattern.test(newEmail.value)) {
+    emailError.value = 'Por favor, insira um formato de e-mail correto.'
+    return
+  }
+  changeEmailStep.value = 2
+}
+
+// Change Password state
+const isChangePasswordOpen = ref(false)
+const changePasswordStep = ref(1)
+const newPassword = ref('')
+const confirmPassword = ref('')
+const verificationCode = ref('')
+const passwordError = ref('')
+const codeError = ref('')
+
+const closeChangePassword = () => {
+  isChangePasswordOpen.value = false
+  changePasswordStep.value = 1
+  newPassword.value = ''
+  confirmPassword.value = ''
+  verificationCode.value = ''
+  passwordError.value = ''
+  codeError.value = ''
+}
+
+const submitNewPassword = () => {
+  passwordError.value = ''
+  if (!newPassword.value) {
+    passwordError.value = 'Por favor, insira a nova senha.'
+    return
+  }
+  if (newPassword.value.length < 6) {
+    passwordError.value = 'A senha deve conter pelo menos 6 caracteres.'
+    return
+  }
+  if (newPassword.value !== confirmPassword.value) {
+    passwordError.value = 'As senhas não coincidem.'
+    return
+  }
+  changePasswordStep.value = 2
+}
+
+const submitVerificationCode = () => {
+  codeError.value = ''
+  if (!verificationCode.value.trim()) {
+    codeError.value = 'Por favor, digite o código de verificação.'
+    return
+  }
+  if (verificationCode.value.trim().length < 4) {
+    codeError.value = 'Código inválido. Digite o código correto.'
+    return
+  }
+  changePasswordStep.value = 3
+}
+
 const handleSettingAction = (action) => {
   if (action === 'reset-password') {
-    alert(t('reset_password') + '!')
+    isChangePasswordOpen.value = true
   } else if (action === 'change-email') {
-    alert(t('change_email') + '!')
+    isChangeEmailOpen.value = true
+  } else if (action === 'terms-and-privacy') {
+    emit('navigate', 'terms')
   }
 }
 
@@ -1040,5 +1244,164 @@ const currentLanguageLabel = computed(() => {
 .slide-up-enter-from,
 .slide-up-leave-to {
   transform: translateY(100%);
+}
+
+/* Custom Modals styling */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a235c;
+}
+
+.modal-flow-step {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.modal-instruction-text {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.modal-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.modal-input-group .input-icon {
+  position: absolute;
+  left: 16px;
+  color: #94a3b8;
+  z-index: 10;
+}
+
+.modal-text-input {
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  outline: none;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.modal-text-input:focus {
+  border-color: #1c5bf0;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(28, 91, 240, 0.1);
+}
+
+.code-input-group {
+  justify-content: center;
+}
+
+.code-input {
+  padding: 16px;
+  text-align: center;
+  font-size: 20px;
+  letter-spacing: 4px;
+  font-weight: 800;
+  max-width: 240px;
+  margin: 0 auto;
+}
+
+.modal-error-message {
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: -4px;
+}
+
+.modal-action-btn {
+  width: 100%;
+  background: #1c5bf0;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(28, 91, 240, 0.15);
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.modal-action-btn:hover {
+  background: #1545bf;
+  box-shadow: 0 6px 16px rgba(28, 91, 240, 0.25);
+  transform: translateY(-1px);
+}
+
+.modal-action-btn:active {
+  transform: translateY(0);
+}
+
+/* Success Step specific style */
+.success-step {
+  align-items: center;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.success-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  background-color: #f0fdf4;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.12);
+}
+
+.success-check-icon {
+  color: #22c55e;
+}
+
+.success-step-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a235c;
+  margin: 0 0 8px 0;
+}
+
+.success-step-text {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+}
+
+.success-btn {
+  background-color: #22c55e;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.success-btn:hover {
+  background-color: #16a34a;
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.25);
 }
 </style>

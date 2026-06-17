@@ -14,6 +14,7 @@ import MascotChatView from './components/MascotChatView.vue'
 import SidebarMenu from './components/SidebarMenu.vue'
 import ConversationsView from './components/ConversationsView.vue'
 import ProfileView from './components/ProfileView.vue'
+import TermsView from './components/TermsView.vue'
 
 const currentForm = ref('login')
 const selectedLanguage = ref(null)
@@ -53,7 +54,7 @@ const handleNavigation = (route) => {
 const lastForm = ref('home')
 
 watch(currentForm, (newVal) => {
-  const chatViews = ['chat', 'saved-chat', 'group-chat', 'mascot-chat']
+  const chatViews = ['chat', 'saved-chat', 'group-chat', 'mascot-chat', 'terms']
   if (!chatViews.includes(newVal)) {
     lastForm.value = newVal
   }
@@ -71,7 +72,7 @@ const handleGoBack = () => {
     @navigate="handleNavigation"
   />
 
-  <div class="auth-layout" v-if="currentForm !== 'home' && currentForm !== 'language-courses' && currentForm !== 'course-mode' && currentForm !== 'conversations' && currentForm !== 'profile'">
+  <div class="auth-layout" v-if="currentForm === 'login' || currentForm === 'register' || currentForm === 'forgot'">
     <LanguageSelector />
     <HeroSection />
     
@@ -158,6 +159,14 @@ const handleGoBack = () => {
       v-if="currentForm === 'profile'"
       @goBack="currentForm = 'home'"
       @navigate="handleNavigation"
+      @openSidebar="isSidebarOpen = true"
+    />
+  </transition>
+
+  <transition name="fade">
+    <TermsView 
+      v-if="currentForm === 'terms'"
+      @goBack="handleGoBack"
       @openSidebar="isSidebarOpen = true"
     />
   </transition>

@@ -1,13 +1,10 @@
 <template>
   <div class="view-container">
     <header class="app-header">
-      <div class="header-logo-container" @click="$emit('navigate', 'home')" style="cursor: pointer;">
-        <img src="../assets/img/logo-change.png" class="header-logo" alt="Change" />
-      </div>
-      <h2 class="header-title">{{ t('nav_chats') }}</h2>
       <button class="menu-btn" @click="$emit('openSidebar')">
         <MenuIcon size="24" stroke-width="2.5" />
       </button>
+      <h2 class="header-title">{{ t('nav_chats') }}</h2>
     </header>
 
     <div class="content-scroll">

@@ -2,13 +2,10 @@
   <div class="home-container">
     <!-- Static App Header -->
     <header class="app-header">
-      <div class="header-logo-container" @click="$emit('navigate', 'home')" style="cursor: pointer;">
-        <img src="../assets/img/logo-change.png" class="header-logo" alt="Change" />
-      </div>
-      <h2 class="header-title">{{ t('nav_home') }}</h2>
       <button class="menu-btn" @click="$emit('openSidebar')">
         <MenuIcon size="24" stroke-width="2.5" />
       </button>
+      <h2 class="header-title">{{ t('nav_home') }}</h2>
     </header>
 
     <div class="home-content">
@@ -40,20 +37,6 @@
           <div class="card-label" style="background-color: #0b5e28;">Português</div>
         </div>
       </div>
-      <!-- SUPPORT/SCHOOLS SECTION -->
-      <div class="support-section">
-        <div class="support-card">
-          <h3 class="support-title">Trabalhamos com centenas de escolas e bibliotecas.</h3>
-          <p class="support-desc">
-            A Change Skills oferece descontos especiais em nossa plataforma de aprendizado de idiomas para espaços educacionais e comunitários.
-          </p>
-          
-          <div class="support-image-container">
-            <img src="https://lingopie.com/cdn-cgi/image/format=auto,quality=75,fit=scale-down/https://d1ndg56vpa7k9f.cloudfront.net/assets/homepage/schools_mobile_c.png" class="support-image" alt="Escolas e bibliotecas" />
-            <button class="support-btn" @click="handleSupportClick">Contate-nos</button>
-          </div>
-        </div>
-      </div>
 
     </div>
     <nav class="bottom-nav">
@@ -83,10 +66,6 @@ import {
 import { t } from '../data/translations.js'
 
 defineEmits(['selectLanguage', 'openSidebar', 'navigate'])
-
-const handleSupportClick = () => {
-  alert('Iniciando atendimento de suporte para escolas e bibliotecas...')
-}
 </script>
 
 <style scoped>
