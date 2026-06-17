@@ -232,7 +232,7 @@ const isSaved = (chat) => {
 }
 
 const activeChatsCount = computed(() => {
-  return activeChats.value.filter(chat => isSaved(chat) && chat.streak > 0).length
+  return friends.value.filter(f => f.streak > 0).length
 })
 
 const selectedFriend = ref(null)
