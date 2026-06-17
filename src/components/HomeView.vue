@@ -178,7 +178,6 @@ defineEmits(['selectLanguage', 'openSidebar', 'navigate'])
   object-fit: contain;
   margin-bottom: -4px;
   margin-top: -20px;
-  animation: floatMascot 4s ease-in-out infinite;
 }
 
 .mascot-header h2 {

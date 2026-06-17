@@ -13,7 +13,7 @@
         <img src="../assets/2.png" class="banner-mascot" />
         <div class="banner-text">
           <strong>{{ t('keep_practicing') }}</strong>
-          <p>{{ t('keep_practicing_desc') }}</p>
+          <p>{{ t('keep_practicing_desc').replace('{count}', activeChatsCount) }}</p>
         </div>
       </div>
 
@@ -84,14 +84,18 @@
               </div>
               <div class="chat-preview-row">
                 <span class="chat-preview">{{ chat.lastMessage }}</span>
-                <div class="streak-badge" v-if="chat.streak > 0">
+                <div class="streak-badge" v-if="isSaved(chat) && chat.streak > 0">
                   <span style="display: inline-flex; align-items: center; gap: 4px;"><StreakFlame size="16" /> {{ chat.streak }} {{ t('streak_days') }}</span>
                 </div>
               </div>
             </div>
-            <div class="chat-action">
+            <div class="chat-action" v-if="!isSaved(chat)">
               <span v-if="sentRequests.includes(chat.id)" class="request-sent-badge">Solicitado</span>
-              <button v-else class="continue-conversa-btn" @click.stop="handleContinueChat(chat)">
+              <button 
+                v-else 
+                class="continue-conversa-btn" 
+                @click.stop="handleContinueChat(chat)"
+              >
                 {{ t('continue_btn') }}
               </button>
             </div>
@@ -188,7 +192,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { 
   Menu as MenuIcon, 
   Check as CheckIcon, 
@@ -217,12 +221,19 @@ const pendingRequests = ref([
 const friends = ref([
   { id: 1, name: 'David Smith', avatar: 'https://i.pravatar.cc/150?img=12', streak: 7, language: 'Inglês', level: 'Intermediário', online: true },
   { id: 2, name: 'Ana Souza', avatar: 'https://i.pravatar.cc/150?img=47', streak: 3, language: 'Espanhol', level: 'Avançado', online: false },
-  { id: 3, name: 'Carlos Santos', avatar: 'https://i.pravatar.cc/150?img=11', streak: 5, language: 'Inglês', level: 'Iniciante', online: true },
   { id: 4, name: 'Lucas Lima', avatar: 'https://i.pravatar.cc/150?img=33', streak: 5, language: 'Francês', level: 'Intermediário', online: false },
   { id: 5, name: 'Marcos Oliveira', avatar: 'https://i.pravatar.cc/150?img=8', streak: 12, language: 'Inglês', level: 'Avançado', online: true },
   { id: 6, name: 'Sofia Ramos', avatar: 'https://i.pravatar.cc/150?img=9', streak: 8, language: 'Espanhol', level: 'Iniciante', online: false },
   { id: 7, name: 'Julia Costa', avatar: 'https://i.pravatar.cc/150?img=5', streak: 4, language: 'Português', level: 'Intermediário', online: true }
 ])
+
+const isSaved = (chat) => {
+  return friends.value.some(f => f.name === chat.name)
+}
+
+const activeChatsCount = computed(() => {
+  return activeChats.value.filter(chat => isSaved(chat) && chat.streak > 0).length
+})
 
 const selectedFriend = ref(null)
 const isFriendProfileOpen = ref(false)
